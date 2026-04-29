@@ -10,95 +10,130 @@ use Illuminate\Support\Facades\Log;
 class FetchNewPosts extends Command
 {
     protected $signature = 'posts:fetch-new {--dry-run : Show what would be added without saving}';
-    protected $description = 'Fetch new articles from author pages and add to blog using AI';
+    protected $description = 'Fetch new articles by Ana Bárbara Pedrosa via Google News and add to blog';
 
-    private array $sources = [
-        ['url' => 'https://observador.pt/perfil/abpedrosa/', 'name' => 'Observador'],
-        ['url' => 'https://www.sabado.pt/autores/detalhe/ana-barbara-pedrosa', 'name' => 'Sábado'],
-        ['url' => 'https://amensagem.pt/author/ana-barbara-pedrosa/', 'name' => 'Mensagem de Lisboa'],
+    private array $allowedSources = [
+        'Observador'          => 'Observador',
+        'OBSERVADOR'          => 'Observador',
+        'SÁBADO'              => 'Sábado',
+        'Sábado'              => 'Sábado',
+        'Expresso'            => 'Expresso',
+        'EXPRESSO'            => 'Expresso',
+        'Mensagem de Lisboa'  => 'Mensagem de Lisboa',
+        'Público'             => 'Público',
+        'PÚBLICO'             => 'Público',
     ];
 
     public function handle(): int
     {
         $dryRun = $this->option('dry-run');
 
-        foreach ($this->sources as $source) {
-            $this->info("Checking {$source['name']}...");
-            try {
-                $this->processSource($source['url'], $source['name'], $dryRun);
-            } catch (\Exception $e) {
-                $this->error("Failed {$source['name']}: {$e->getMessage()}");
-                Log::error("FetchNewPosts failed for {$source['name']}", ['error' => $e->getMessage()]);
+        $xml = $this->fetchGoogleNewsRss();
+        if (!$xml) {
+            $this->error('Failed to fetch Google News RSS.');
+            return self::FAILURE;
+        }
+
+        $items = $this->parseRss($xml);
+        $this->info('Found ' . count($items) . ' items in feed.');
+
+        $added = 0;
+        foreach ($items as $item) {
+            $sourceName = $this->normalizeSource($item['source']);
+            if (!$sourceName) continue;
+
+            $realUrl = $this->resolveUrl($item['url']);
+            if (!$realUrl) continue;
+
+            if (Post::where('external_url', $realUrl)->exists()) continue;
+
+            $excerpt = $this->generateExcerpt($realUrl, $item['title']);
+
+            if ($dryRun) {
+                $this->line("[DRY RUN] {$sourceName}: {$item['title']}");
+                $this->line("          {$realUrl}");
+                continue;
             }
+
+            Post::create([
+                'title'        => $item['title'],
+                'type'         => 'article',
+                'source_name'  => $sourceName,
+                'external_url' => $realUrl,
+                'excerpt'      => $excerpt,
+                'published_at' => $item['date'] ?? now(),
+                'is_active'    => true,
+            ]);
+
+            $this->line("Added [{$sourceName}]: {$item['title']}");
+            $added++;
+        }
+
+        if (!$dryRun) {
+            $this->info("{$added} new article(s) added.");
         }
 
         return self::SUCCESS;
     }
 
-    private function processSource(string $pageUrl, string $sourceName, bool $dryRun): void
+    private function fetchGoogleNewsRss(): ?string
     {
-        $html = Http::timeout(30)->get($pageUrl)->body();
+        $url = 'https://news.google.com/rss/search?q=%22ana+barbara+pedrosa%22&hl=pt-PT&gl=PT&ceid=PT:pt';
+        $response = Http::timeout(30)->withHeaders([
+            'User-Agent' => 'Mozilla/5.0 (compatible; RSS reader)',
+        ])->get($url);
 
-        $articles = $this->extractArticlesWithAI($html, $sourceName, $pageUrl);
+        return $response->successful() ? $response->body() : null;
+    }
 
-        if (empty($articles)) {
-            $this->line("  No articles found.");
-            return;
+    private function parseRss(string $xml): array
+    {
+        libxml_use_internal_errors(true);
+        $feed = simplexml_load_string($xml);
+        if (!$feed) return [];
+
+        $items = [];
+        foreach ($feed->channel->item ?? [] as $item) {
+            $source = (string) ($item->source ?? '');
+            $title  = (string) $item->title;
+            $url    = (string) $item->link;
+            $date   = $item->pubDate ? date('Y-m-d', strtotime((string) $item->pubDate)) : null;
+
+            $items[] = compact('title', 'url', 'source', 'date');
         }
 
-        $added = 0;
-        foreach ($articles as $article) {
-            if (empty($article['url']) || empty($article['title'])) continue;
+        return $items;
+    }
 
-            if (Post::where('external_url', $article['url'])->exists()) continue;
-
-            $excerpt = $this->generateExcerpt($article['url'], $article['title']);
-
-            if ($dryRun) {
-                $this->line("  [DRY RUN] Would add: {$article['title']}");
-                continue;
+    private function normalizeSource(string $source): ?string
+    {
+        foreach ($this->allowedSources as $key => $normalized) {
+            if (stripos($source, $key) !== false) {
+                return $normalized;
             }
-
-            Post::create([
-                'title'        => $article['title'],
-                'type'         => 'article',
-                'source_name'  => $sourceName,
-                'external_url' => $article['url'],
-                'excerpt'      => $excerpt,
-                'published_at' => $article['date'] ?? now(),
-                'is_active'    => true,
-            ]);
-
-            $this->line("  Added: {$article['title']}");
-            $added++;
         }
-
-        if (!$dryRun) {
-            $this->info("  {$added} new article(s) added from {$sourceName}.");
-        }
+        return null;
     }
 
-    private function extractArticlesWithAI(string $html, string $sourceName, string $pageUrl): array
-    {
-        $response = $this->callClaude(
-            "You are parsing an author page for Portuguese writer Ana Bárbara Pedrosa on {$sourceName}.\n" .
-            "Page URL: {$pageUrl}\n\n" .
-            "Extract ALL article links from this HTML. Return ONLY a valid JSON array, no other text.\n" .
-            "Each object must have: \"title\" (string), \"url\" (full absolute URL string), \"date\" (YYYY-MM-DD or null).\n" .
-            "Only include articles authored by Ana Bárbara Pedrosa. If a URL is relative, make it absolute using the page URL domain.\n\n" .
-            "HTML:\n" . mb_substr($html, 0, 60000)
-        );
-
-        preg_match('/\[.*\]/s', $response, $matches);
-        if (empty($matches[0])) return [];
-
-        return json_decode($matches[0], true) ?? [];
-    }
-
-    private function generateExcerpt(string $articleUrl, string $title): string
+    private function resolveUrl(string $googleNewsUrl): ?string
     {
         try {
-            $html = Http::timeout(30)->get($articleUrl)->body();
+            $response = Http::timeout(15)->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (compatible; RSS reader)',
+            ])->get($googleNewsUrl);
+
+            return $response->effectiveUri()?->__toString() ?? $googleNewsUrl;
+        } catch (\Exception $e) {
+            return $googleNewsUrl;
+        }
+    }
+
+    private function generateExcerpt(string $url, string $title): string
+    {
+        try {
+            $html = Http::timeout(30)->withHeaders([
+                'User-Agent' => 'Mozilla/5.0 (compatible; RSS reader)',
+            ])->get($url)->body();
 
             return $this->callClaude(
                 "Write a 1-2 sentence summary IN PORTUGUESE of the article titled \"{$title}\".\n" .
@@ -107,6 +142,7 @@ class FetchNewPosts extends Command
                 "HTML:\n" . mb_substr($html, 0, 40000)
             );
         } catch (\Exception $e) {
+            Log::warning("FetchNewPosts: could not generate excerpt for {$url}", ['error' => $e->getMessage()]);
             return '';
         }
     }
@@ -119,10 +155,10 @@ class FetchNewPosts extends Command
             'content-type'      => 'application/json',
         ])->timeout(60)->post('https://api.anthropic.com/v1/messages', [
             'model'      => 'claude-haiku-4-5-20251001',
-            'max_tokens' => 2048,
+            'max_tokens' => 300,
             'messages'   => [['role' => 'user', 'content' => $prompt]],
         ]);
 
-        return $response->json('content.0.text', '');
+        return trim($response->json('content.0.text', ''));
     }
 }
