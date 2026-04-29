@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\SiteSetting;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -28,7 +29,7 @@ class ManageSettings extends Page implements HasForms
 
     public function mount(): void
     {
-        $keys = ['bio', 'instagram_url', 'facebook_url', 'linkedin_url', 'twitter_url', 'meta_description'];
+        $keys = ['subtitle', 'bio', 'author_photo', 'instagram_url', 'facebook_url', 'linkedin_url', 'twitter_url', 'meta_description'];
         $this->form->fill(
             collect($keys)->mapWithKeys(fn ($k) => [$k => SiteSetting::get($k)])->all()
         );
@@ -37,13 +38,21 @@ class ManageSettings extends Page implements HasForms
     public function form(Schema $form): Schema
     {
         return $form->schema([
+            FileUpload::make('author_photo')
+                ->label('Fotografia da autora')
+                ->image()
+                ->disk('public')
+                ->directory('author')
+                ->imageEditor()
+                ->columnSpanFull(),
+            TextInput::make('subtitle')->label('Subtítulo (abaixo do nome)')->placeholder('Escritora'),
             Textarea::make('bio')->label('Bio / Tagline')->rows(3),
             TextInput::make('meta_description')->label('Meta description'),
             TextInput::make('instagram_url')->url()->label('Instagram'),
             TextInput::make('facebook_url')->url()->label('Facebook'),
             TextInput::make('linkedin_url')->url()->label('LinkedIn'),
             TextInput::make('twitter_url')->url()->label('Twitter / X'),
-        ])->statePath('data');
+        ])->statePath('data')->columns(2);
     }
 
     public function save(): void

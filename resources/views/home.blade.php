@@ -2,19 +2,35 @@
     <x-slot name="title">Ana Bárbara Pedrosa</x-slot>
 
     {{-- Hero --}}
+    @php
+        $bio = \App\Models\SiteSetting::get('bio');
+        $subtitle = \App\Models\SiteSetting::get('subtitle');
+        $authorPhoto = \App\Models\SiteSetting::get('author_photo');
+    @endphp
     <section class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
-        <div class="max-w-2xl">
-            <h1 class="text-4xl sm:text-5xl font-semibold text-neutral-900 tracking-tight leading-tight">
-                Ana Bárbara Pedrosa
-            </h1>
-            @php $bio = \App\Models\SiteSetting::get('bio'); @endphp
-            @if($bio)
-                <p class="mt-4 text-lg text-neutral-500 leading-relaxed">{{ $bio }}</p>
-            @endif
-            <div class="mt-8 flex flex-wrap gap-3">
-                <a href="{{ route('books.index') }}" class="btn-primary">Ver livros</a>
-                <a href="{{ route('about') }}" class="btn-outline">Sobre mim</a>
+        <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-10">
+            <div class="max-w-xl">
+                <h1 class="text-4xl sm:text-5xl font-semibold text-neutral-900 tracking-tight leading-tight">
+                    Ana Bárbara Pedrosa
+                </h1>
+                @if($subtitle)
+                    <p class="mt-2 text-base text-neutral-400 uppercase tracking-widest">{{ $subtitle }}</p>
+                @endif
+                @if($bio)
+                    <p class="mt-4 text-lg text-neutral-500 leading-relaxed">{{ $bio }}</p>
+                @endif
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ route('books.index') }}" class="btn-primary">Ver livros</a>
+                    <a href="{{ route('about') }}" class="btn-outline">Sobre mim</a>
+                </div>
             </div>
+            @if($authorPhoto)
+                <div class="shrink-0">
+                    <img src="{{ Storage::disk('public')->url($authorPhoto) }}"
+                         alt="Ana Bárbara Pedrosa"
+                         class="w-48 h-48 sm:w-64 sm:h-64 rounded-full object-cover shadow-md">
+                </div>
+            @endif
         </div>
     </section>
 
