@@ -9,13 +9,16 @@
                 @foreach($reviews as $review)
                     <article class="bg-neutral-50 rounded-xl p-6 flex flex-col">
                         <blockquote class="flex-1">
-                            @if($review->excerpt)
-                                <p class="text-neutral-700 italic leading-relaxed">"{{ $review->excerpt }}"</p>
+                            @if($review->quote)
+                                <p class="text-neutral-700 italic leading-relaxed">"{{ $review->quote }}"</p>
                             @endif
                         </blockquote>
                         <footer class="mt-5 pt-4 border-t border-neutral-200 flex items-center justify-between gap-4">
                             <div>
-                                <cite class="text-sm font-medium text-neutral-900 not-italic">{{ $review->source_name }}</cite>
+                                <cite class="text-sm font-medium text-neutral-900 not-italic">{{ $review->critic }}</cite>
+                                @if($review->source)
+                                    <span class="text-sm text-neutral-500">, {{ $review->source }}</span>
+                                @endif
                                 @if($review->book)
                                     <p class="text-xs text-neutral-400 mt-0.5">
                                         <a href="{{ route('books.show', $review->book->slug) }}" class="hover:underline">{{ $review->book->title }}</a>
@@ -23,7 +26,7 @@
                                 @endif
                             </div>
                             @if($review->external_url)
-                                <a href="{{ $review->external_url }}" target="_blank" rel="noopener" class="text-xs text-neutral-400 hover:text-neutral-700 shrink-0">Ler artigo →</a>
+                                <a href="{{ $review->external_url }}" target="_blank" rel="noopener" class="text-xs text-neutral-400 hover:text-neutral-700 shrink-0">Ler →</a>
                             @endif
                         </footer>
                     </article>

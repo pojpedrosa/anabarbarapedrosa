@@ -16,11 +16,11 @@ class ReviewForm
         return $schema
             ->components([
                 \Filament\Schemas\Components\Section::make()->columns(2)->schema([
-                    TextInput::make('title')->required()->columnSpanFull(),
-                    TextInput::make('source_name')->required()->label('Fonte'),
+                    TextInput::make('critic')->required()->label('Crítico')->columnSpanFull(),
+                    TextInput::make('source')->nullable()->label('Fonte (opcional)'),
                     Select::make('book_id')->relationship('book', 'title')->label('Livro')->searchable()->preload(),
-                    Textarea::make('excerpt')->label('Excerto')->columnSpanFull()->rows(4),
-                    TextInput::make('external_url')->url()->label('URL externo'),
+                    Textarea::make('quote')->required()->label('Crítica')->columnSpanFull()->rows(4),
+                    TextInput::make('external_url')->url()->label('Link'),
                     DatePicker::make('published_at')->label('Data de publicação'),
                 ]),
                 \Filament\Schemas\Components\Section::make('Visibilidade')->columns(3)->schema([

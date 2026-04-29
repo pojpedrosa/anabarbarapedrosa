@@ -15,10 +15,9 @@ class ReviewsTable
     {
         return $table
             ->columns([
-                TextColumn::make('title')->searchable()->sortable(),
-                TextColumn::make('source_name')->label('Fonte')->searchable(),
+                TextColumn::make('critic')->searchable()->sortable()->label('Crítico'),
+                TextColumn::make('source')->label('Fonte')->searchable()->placeholder('—'),
                 TextColumn::make('book.title')->label('Livro')->searchable()->toggleable(),
-                TextColumn::make('published_at')->date()->sortable()->label('Data'),
                 IconColumn::make('is_active')->boolean()->label('Activo'),
                 TextColumn::make('sort_order')->numeric()->sortable()->label('Ordem'),
             ])

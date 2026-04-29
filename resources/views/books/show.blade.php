@@ -75,13 +75,18 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     @foreach($reviews as $review)
                         <blockquote class="bg-neutral-50 rounded-xl p-6">
-                            @if($review->excerpt)
-                                <p class="text-neutral-700 italic leading-relaxed">"{{ $review->excerpt }}"</p>
+                            @if($review->quote)
+                                <p class="text-neutral-700 italic leading-relaxed">"{{ $review->quote }}"</p>
                             @endif
-                            <footer class="mt-4 flex items-center justify-between">
-                                <cite class="text-sm text-neutral-500 not-italic font-medium">{{ $review->source_name }}</cite>
+                            <footer class="mt-4 flex items-center justify-between gap-4">
+                                <div>
+                                    <cite class="text-sm text-neutral-900 not-italic font-medium">{{ $review->critic }}</cite>
+                                    @if($review->source)
+                                        <span class="text-sm text-neutral-500">, {{ $review->source }}</span>
+                                    @endif
+                                </div>
                                 @if($review->external_url)
-                                    <a href="{{ $review->external_url }}" target="_blank" rel="noopener" class="text-xs text-neutral-400 hover:text-neutral-700">Ler →</a>
+                                    <a href="{{ $review->external_url }}" target="_blank" rel="noopener" class="text-xs text-neutral-400 hover:text-neutral-700 shrink-0">Ler →</a>
                                 @endif
                             </footer>
                         </blockquote>
