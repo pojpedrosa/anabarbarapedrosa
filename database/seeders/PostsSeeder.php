@@ -225,6 +225,78 @@ class PostsSeeder extends Seeder
                 'excerpt'      => 'Um percurso pela obra de António Lobo Antunes através de cinco romances essenciais. Uma proposta de leitura para quem quer entrar num dos universos mais exigentes e recompensadores da literatura portuguesa.',
                 'published_at' => '2023-06-01',
             ],
+
+            // ── Expresso ─────────────────────────────────────────────────────
+            [
+                'title'        => 'J. K. Rowling e os censores modernos, que são tão fofinhos',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/opiniao/2026-04-10-j.-k.-rowling-e-os-censores-modernos-que-sao-tao-fofinhos-73533dcc',
+                'excerpt'      => 'Respeite-se J. K. Rowling. Pôs milhões com livros nas mãos. E fez aquela coisa tão básica que se quer da literatura infanto-juvenil.',
+                'published_at' => '2026-04-08',
+            ],
+            [
+                'title'        => 'Livros: Há gente a sério em "Autobiografia da Minha Mãe", de Jamaica Kincaid',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/revista/culturas/livros/2026-04-23-livros-ha-gente-a-serio-em-autobiografia-da-minha-mae-de-jamaica-kincaid-c29f3829',
+                'excerpt'      => 'Em "Autobiografia da Minha Mãe", Jamaica Kincaid explora brilhantemente uma vida cujos primeiros anos foram marcados pela solidão, e a forma como essa ausência molda uma identidade inteira.',
+                'published_at' => '2026-04-24',
+            ],
+            [
+                'title'        => 'Se for gay ou trans, manda-se arranjar',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/opiniao/2026-04-16-se-for-gay-ou-trans-manda-se-arranjar-70b76a98',
+                'excerpt'      => 'Em 2022, o país ficou espantado quando o Bloco de Esquerda levou ao parlamento um projecto de lei que visava criminalizar as práticas de conversão. Uma reflexão sobre o retrocesso.',
+                'published_at' => '2026-04-15',
+            ],
+            [
+                'title'        => 'Livros: O belo e o grotesco convivem num romance gráfico de Charles Burns',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/revista/culturas/livros/2026-04-16-livros-o-belo-e-o-grotesco-convivem-num-romance-grafico-de-charles-burns-ced6ed66',
+                'excerpt'      => 'É um romance gráfico onde o desconforto guia o leitor. Visualmente arrebatador, funde imagens cinematográficas com uma narrativa perturbadora e original.',
+                'published_at' => '2026-04-15',
+            ],
+            [
+                'title'        => 'Os tabus da esquerda deprimida',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/autores/2026-02-05-ana-barbara-pedrosa-a90ba51f',
+                'excerpt'      => 'A propósito do livro "Autoajuda para uma esquerda deprimida", de Manuel Afonso: o que a esquerda se recusa a discutir e por que razão esse silêncio a prejudica.',
+                'published_at' => '2026-04-01',
+            ],
+            [
+                'title'        => 'Votar contra Jesus',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/autores/2026-02-05-ana-barbara-pedrosa-a90ba51f',
+                'excerpt'      => 'A vitória do Chega é a derrota de Jesus. Um voto no Chega é um voto contra o Novo Testamento.',
+                'published_at' => '2026-02-26',
+            ],
+            [
+                'title'        => 'Como é que a esquerda perdeu as classes populares?',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/autores/2026-02-05-ana-barbara-pedrosa-a90ba51f',
+                'excerpt'      => 'Os números estão aí. O país deu uma guinada à direita e a esquerda orgânica pôs-se em mínimos olímpicos. Uma análise das causas e das recusas.',
+                'published_at' => '2026-02-19',
+            ],
+            [
+                'title'        => 'Civilidade ou lama',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/autores/2026-02-05-ana-barbara-pedrosa-a90ba51f',
+                'excerpt'      => 'É atípico, já se sabe, o que dirá muito sobre um mal maior. Em que outro cenário se cogitaria que Paulo Portas e Carlos Guimarães Pinto partilhassem o mesmo palco?',
+                'published_at' => '2026-02-06',
+            ],
+            [
+                'title'        => 'O fenómeno Rita Matias',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/autores/2026-02-05-ana-barbara-pedrosa-a90ba51f',
+                'excerpt'      => 'O Parlamento virou cenário, o telemóvel virou tribuna e as redes sociais transformaram-se em canais de comunicação à margem do debate político tradicional.',
+                'published_at' => '2026-03-29',
+            ],
+            [
+                'title'        => 'Montenegro a deixar-se devorar',
+                'source_name'  => 'Expresso',
+                'external_url' => 'https://expresso.pt/autores/2026-02-05-ana-barbara-pedrosa-a90ba51f',
+                'excerpt'      => 'Montenegro diluiu as fronteiras entre o PSD e o Chega — e abriu espaço para Ventura liderar a direita.',
+                'published_at' => '2026-02-12',
+            ],
         ];
 
         foreach ($posts as $data) {
