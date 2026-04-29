@@ -15,6 +15,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            git config --global --add safe.directory /var/www/anabarbarapedrosa
             cd /var/www/anabarbarapedrosa
             git pull
             composer install --no-dev --optimize-autoloader
