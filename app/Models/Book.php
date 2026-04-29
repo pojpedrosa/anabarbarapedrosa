@@ -14,7 +14,7 @@ class Book extends Model implements HasMedia
     use HasSlug, InteractsWithMedia;
 
     protected $fillable = [
-        'title', 'slug', 'synopsis', 'isbn', 'publisher',
+        'title', 'type', 'slug', 'synopsis', 'isbn', 'publisher',
         'year', 'pages', 'buy_links', 'is_featured', 'is_active', 'sort_order',
     ];
 

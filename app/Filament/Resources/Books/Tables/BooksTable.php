@@ -16,7 +16,7 @@ class BooksTable
         return $table
             ->columns([
                 TextColumn::make('title')->searchable()->sortable(),
-                TextColumn::make('publisher')->searchable()->toggleable(),
+                TextColumn::make('type')->label('Tipo')->badge()->color('gray'),
                 TextColumn::make('year')->numeric()->sortable(),
                 IconColumn::make('is_featured')->boolean()->label('Destaque'),
                 IconColumn::make('is_active')->boolean()->label('Activo'),

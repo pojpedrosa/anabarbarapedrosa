@@ -13,6 +13,9 @@
         </div>
     @endif
     <div class="p-4">
+        @if($book->type)
+            <p class="text-xs font-medium uppercase tracking-widest text-neutral-400 mb-1">{{ $book->type }}</p>
+        @endif
         <h3 class="font-semibold text-neutral-900 group-hover:underline">{{ $book->title }}</h3>
         @if($book->year)
             <p class="text-sm text-neutral-400 mt-1">{{ $book->year }}</p>

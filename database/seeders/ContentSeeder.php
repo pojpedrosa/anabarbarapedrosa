@@ -25,6 +25,7 @@ class ContentSeeder extends Seeder
         $books = [
             [
                 'title'     => 'Lisboa, Chão Sagrado',
+                'type'      => 'Romance',
                 'isbn'      => '9789722538688',
                 'publisher' => 'Bertrand Editora',
                 'year'      => 2019,
@@ -36,6 +37,7 @@ class ContentSeeder extends Seeder
             ],
             [
                 'title'     => 'Palavra do Senhor',
+                'type'      => 'Romance',
                 'isbn'      => '9789722541091',
                 'publisher' => 'Bertrand Editora',
                 'year'      => 2021,
@@ -47,6 +49,7 @@ class ContentSeeder extends Seeder
             ],
             [
                 'title'     => 'Amor Estragado',
+                'type'      => 'Romance',
                 'isbn'      => '9789722545310',
                 'publisher' => 'Bertrand Editora',
                 'year'      => 2023,
@@ -58,6 +61,7 @@ class ContentSeeder extends Seeder
             ],
             [
                 'title'     => 'Viagens com o Mehdi',
+                'type'      => 'Viagens',
                 'isbn'      => '9789722548045',
                 'publisher' => 'Bertrand Editora',
                 'year'      => 2024,

@@ -3,11 +3,11 @@
 namespace App\Filament\Resources\Books\Schemas;
 
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -19,6 +19,18 @@ class BookForm
             ->components([
                 Section::make()->columns(2)->schema([
                     TextInput::make('title')->required()->columnSpanFull(),
+                    Select::make('type')
+                        ->label('Tipo')
+                        ->options([
+                            'Romance'  => 'Romance',
+                            'Viagens'  => 'Viagens',
+                            'Crónicas' => 'Crónicas',
+                            'Contos'   => 'Contos',
+                            'Poesia'   => 'Poesia',
+                            'Ensaio'   => 'Ensaio',
+                            'Outro'    => 'Outro',
+                        ])
+                        ->searchable(),
                     TextInput::make('slug')->required()->unique(ignoreRecord: true),
                     TextInput::make('publisher'),
                     TextInput::make('isbn'),

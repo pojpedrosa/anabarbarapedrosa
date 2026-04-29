@@ -18,6 +18,9 @@
 
             {{-- Details --}}
             <div class="md:col-span-2">
+                @if($book->type)
+                    <p class="text-xs font-medium uppercase tracking-widest text-neutral-400 mb-2">{{ $book->type }}</p>
+                @endif
                 <h1 class="text-3xl font-semibold text-neutral-900 tracking-tight">{{ $book->title }}</h1>
 
                 <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
