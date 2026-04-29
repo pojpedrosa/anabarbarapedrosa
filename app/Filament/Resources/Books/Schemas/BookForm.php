@@ -42,6 +42,7 @@ class BookForm
                 Section::make('Capa')->schema([
                     SpatieMediaLibraryFileUpload::make('cover')
                         ->collection('cover')
+                        ->disk('public')
                         ->image()
                         ->imageEditor(),
                 ]),

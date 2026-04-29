@@ -39,6 +39,7 @@ class PostForm
                 Section::make('Imagem de capa')->schema([
                     SpatieMediaLibraryFileUpload::make('cover')
                         ->collection('cover')
+                        ->disk('public')
                         ->image()
                         ->imageEditor(),
                 ]),
