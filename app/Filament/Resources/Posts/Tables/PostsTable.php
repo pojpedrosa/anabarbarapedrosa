@@ -15,24 +15,15 @@ class PostsTable
     {
         return $table
             ->columns([
-                TextColumn::make('title')
-                    ->searchable(),
-                TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('published_at')
-                    ->dateTime()
-                    ->sortable(),
-                IconColumn::make('is_active')
-                    ->boolean(),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('title')->searchable()->sortable(),
+                TextColumn::make('type')->label('Tipo')->badge()
+                    ->color(fn ($state) => $state === 'article' ? 'info' : 'success')
+                    ->formatStateUsing(fn ($state) => $state === 'article' ? 'Artigo' : 'Texto'),
+                TextColumn::make('source_name')->label('Publicação')->placeholder('—'),
+                TextColumn::make('published_at')->date()->sortable()->label('Data'),
+                IconColumn::make('is_active')->boolean()->label('Activo'),
             ])
+            ->defaultSort('published_at', 'desc')
             ->filters([
                 //
             ])

@@ -13,7 +13,8 @@ class Post extends Model implements HasMedia
     use HasSlug, InteractsWithMedia;
 
     protected $fillable = [
-        'title', 'slug', 'excerpt', 'body', 'published_at', 'is_active',
+        'title', 'slug', 'type', 'source_name', 'external_url',
+        'excerpt', 'body', 'published_at', 'is_active',
     ];
 
     protected $casts = [
@@ -29,5 +30,10 @@ class Post extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('cover')->singleFile();
+    }
+
+    public function isArticle(): bool
+    {
+        return $this->type === 'article';
     }
 }
