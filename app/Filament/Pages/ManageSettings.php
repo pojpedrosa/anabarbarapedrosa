@@ -64,7 +64,7 @@ class ManageSettings extends Page implements HasForms
         Notification::make()->title('Definições guardadas')->success()->send();
     }
 
-    protected function getFormActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Action::make('save')->label('Guardar')->action('save'),
